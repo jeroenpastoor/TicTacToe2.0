@@ -45,6 +45,11 @@ namespace TicTacToe2.GameTypes
                     int y;
                     if (coords.Length == 2 && Int32.TryParse(coords[0], out x) && Int32.TryParse(coords[1], out y))
                     {
+                        if (x >= board.Size || y >= board.Size)
+                        {
+                            Console.WriteLine("The position ({0}, {1}) is out of bounds! The maximum value is {2}", x, y, board.Size-1);
+                            continue;
+                        }
                         if (board.DoMove(x, y, currPlayer))
                         {
                             validMove = true;

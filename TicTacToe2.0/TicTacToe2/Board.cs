@@ -26,12 +26,12 @@ namespace TicTacToe2
         /// <summary>
         /// Size of the board.
         /// </summary>
-        private int size;
+        public int Size { get; private set; }
 
         public Board(int size = 3)
         {
 
-            this.size = size;
+            this.Size = size;
             Values = new int[size][];
             for (int i = 0; i < size; i++)
             {
@@ -54,7 +54,7 @@ namespace TicTacToe2
             Values[x][y] = player;
             if (Values[x].All(v => v == player) ||
                 Values.All(a => a[y] == player) ||
-                (x == y || y == size - 1 - x) &&
+                (x == y || y == Size - 1 - x) &&
                 Diagonals.Any(diag => diag.All(val => val == player)))
                 Winner = player;
             
@@ -71,14 +71,14 @@ namespace TicTacToe2
             {
                 int[][] result =
                 {
-                    new int[size],
-                    new int[size]
+                    new int[Size],
+                    new int[Size]
                 };
 
-                for (int i = 0; i < size; i++)
+                for (int i = 0; i < Size; i++)
                 {
                     result[0][i] = Values[i][i];
-                    result[1][i] = Values[i][size - 1 - i];
+                    result[1][i] = Values[i][Size - 1 - i];
                 }
                 return result;
             }
@@ -90,12 +90,12 @@ namespace TicTacToe2
         public override string ToString()
         {
             string result = "";
-            for (int i = 0; i < size; i++)
+            for (int i = 0; i < Size; i++)
             {
                 result += String.Join("|", Values.Select(row => " " + Program.SymbolMap[row[i]] + " "));
-                if (i != size - 1)
+                if (i != Size - 1)
                 {
-                    result += "\n" + new String('-', size*4 - 1) + "\n";
+                    result += "\n" + new String('-', Size*4 - 1) + "\n";
                 }
             }
 
