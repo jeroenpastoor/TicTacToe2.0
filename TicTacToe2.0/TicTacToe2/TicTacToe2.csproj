@@ -59,10 +59,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Board.cs" />
+    <Compile Include="GameTypes\Game.cs" />
+    <Compile Include="GameTypes\MultiBoardTicTacToe.cs" />
+    <Compile Include="GameTypes\InverseMultiBoard.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="GameTypes\ReverseTicTacToe.cs" />
-    <Compile Include="GameTypes\TicTacToe.cs" />
+    <Compile Include="GameTypes\InverseTicTacToe.cs" />
+    <Compile Include="GameTypes\ClassicTicTacToe.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

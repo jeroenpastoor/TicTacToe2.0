@@ -13,11 +13,24 @@ namespace TicTacToe2
 {
     public class Board
     {
+        /// <summary>
+        /// Represents the symbols in the board;
+        /// </summary>
         public int[][] Values;
-        private int size = 0;
+
+        /// <summary>
+        /// Winner in the current board. Zero if none;
+        /// </summary>
+        public int Winner { get; private set; }
+
+        /// <summary>
+        /// Size of the board.
+        /// </summary>
+        private int size;
 
         public Board(int size = 3)
         {
+
             this.size = size;
             Values = new int[size][];
             for (int i = 0; i < size; i++)
@@ -26,72 +39,60 @@ namespace TicTacToe2
             }
         }
 
-        private int[][] TransposedValues()
+        /// <summary>
+        /// Place a <paramref name="player"/>'s symbol at a given position.
+        /// </summary>
+        /// <param name="x">X coordinate of the target position.</param>
+        /// <param name="y">Y coordinate of the target position. </param>
+        /// <param name="player">Player making this move.</param>
+        /// <returns>True if legal move, false otherwise.</returns>
+        public bool DoMove(int x, int y, int player)
         {
-            int[][] result = new int[size][];
-            for (int i = 0; i < size; i++)
-            {
-                result[i] = new int[size];
-                for (int j = 0; j < size; j++)
-                {
-                    result[i][j] = Values[j][i];
-                }
-            }
+            if (Values[x][y] != 0)
+                return false;
 
-            return result;
+            Values[x][y] = player;
+            if (Values[x].All(v => v == player) ||
+                Values.All(a => a[y] == player) ||
+                (x == y || y == size - 1 - x) &&
+                Diagonals.Any(diag => diag.All(val => val == player)))
+                Winner = player;
+            
+            return true;
         }
 
-        public virtual int Winner
+        /// <summary>
+        /// Returns the diagonals of the board.
+        /// Index 0 is top left to bottom right, index 1 is top right to bottom left.
+        /// </summary>
+        public int[][] Diagonals
         {
             get
             {
-                int[][] rows = TransposedValues();
-                int[] diagA = new int[size];
-                int[] diagB = new int[size];
+                int[][] result =
+                {
+                    new int[size],
+                    new int[size]
+                };
+
                 for (int i = 0; i < size; i++)
                 {
-                    if (Values[i][0] != 0 && Values[i].All(x => x == Values[i][0]))
-                    {
-                        return Values[i][0];
-                    }
-                    if (rows[i][0] != 0 && rows[i].All(x => x == rows[i][0]))
-                    {
-                        return rows[i][0];
-                    }
-                    diagA[i] = Values[i][i];
-                    diagB[i] = Values[i][size - 1 - i];
+                    result[0][i] = Values[i][i];
+                    result[1][i] = Values[i][size - 1 - i];
                 }
-
-                if (diagA[0] != 0 && diagA.All(x => x == diagA[0]))
-                {
-                    return diagA[0];
-                }
-                if (diagB[0] != 0 && diagB.All(x => x == diagB[0]))
-                {
-                    return diagB[0];
-                }
-
-                return 0;
+                return result;
             }
         }
 
+        /// <summary>
+        /// Wraps the board's values into a fancy string with a grid.
+        /// </summary>
         public override string ToString()
         {
             string result = "";
             for (int i = 0; i < size; i++)
             {
-                result += String.Join("|", Values[i].Select(x =>
-                {
-                    switch (x)
-                    {
-                        case 1:
-                            return " X ";
-                        case 2:
-                            return " O ";
-                        default:
-                            return "   ";
-                    }
-                }));
+                result += String.Join("|", Values.Select(row => " " + Program.SymbolMap[row[i]] + " "));
                 if (i != size - 1)
                 {
                     result += "\n" + new String('-', size*4 - 1) + "\n";
@@ -99,11 +100,6 @@ namespace TicTacToe2
             }
 
             return result;
-        }
-
-        public void Display()
-        {
-            Program.WriteCenter(ToString());
         }
     }
 }

@@ -10,7 +10,26 @@ namespace TicTacToe2
 {
     class Program
     {
-        private static string[] gameTypes = { "C", "I" };
+        /// <summary>
+        /// Maps the player number to its symbol (or a space if no player).
+        /// </summary>
+        public static readonly Dictionary<int, string> SymbolMap = new Dictionary<int, string>()
+        {
+            { 0, " " },
+            { 1, "X" },
+            { 2, "O" }
+        };
+
+        /// <summary>
+        /// Maps input to game types.
+        /// </summary>
+        private static readonly Dictionary<string, string> _gameTypes = new Dictionary<string, string>()
+        {
+            { "C", "Classic" },
+            { "I", "Inverse" },
+            { "M", "Multi-Board" },
+            { "IM", "Inverse Multi-Board" }
+        };
 
         static void Main(string[] args)
         {
@@ -36,6 +55,11 @@ namespace TicTacToe2
             }
         }
 
+        /// <summary>
+        /// Takes input from the player and acts on it.
+        /// </summary>
+        /// <param name="input">Input given in the console.</param>
+        /// <returns>False if invalid input.</returns>
         private static bool HandleInput(string input)
         {
             switch (input)
@@ -44,21 +68,34 @@ namespace TicTacToe2
                     Environment.Exit(0);
                     break;
                 case "P":
-                    Console.WriteLine("Choose a game type. C for classic, I for inverse.");
+                    string typeOptions = "";
+                    foreach (var key in _gameTypes.Keys)
+                    {
+                        if (typeOptions != "")
+                            typeOptions += ", ";
+                        typeOptions += key + " for " + _gameTypes[key];
+                    }
+                    Console.WriteLine("Choose a game type. {0}.", typeOptions);
                     string gameType = Console.ReadLine();
                     while (!ValidGameType(gameType))
                     {
-                        Console.WriteLine(gameType + " is not a valid game type. Please enter C for classic, I for inverse.");
+                        Console.WriteLine("{0} is not a valid game type. Please enter {1}.",  gameType, typeOptions);
                         gameType = Console.ReadLine();
                     }
-                    TicTacToe game;
+                    Game game;
                     switch (gameType.ToUpper())
                     {
+                        case "M":
+                            game = new MultiBoardTicTacToe();
+                            break;
+                        case "IM":
+                            game = new InverseMultiBoard();
+                            break;
                         case "I":
-                            game = new ReverseTicTacToe();
+                            game = new InverseTicTacToe();
                             break;
                         default:
-                            game = new TicTacToe();
+                            game = new ClassicTicTacToe();
                             break;
                     }
                     game.Play();
@@ -74,11 +111,19 @@ namespace TicTacToe2
             return true;
         }
 
+        /// <summary>
+        /// Checks if the input for gameType is a valid choice.
+        /// </summary>
+        /// <param name="gameType">Player's input.</param>
         private static bool ValidGameType(string gameType)
         {
-            return gameType.Contains(gameType.ToUpper());
+            return _gameTypes.ContainsKey(gameType.ToUpper());
         }
 
+        /// <summary>
+        /// Writes a string in the center of the console, keeping in mind possible multi-line strings.
+        /// </summary>
+        /// <param name="toWrite">The string to write in the console.</param>
         public static void WriteCenter(string toWrite)
         {
             string[] strings = toWrite.Split('\n');

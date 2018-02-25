@@ -1,25 +1,31 @@
 ﻿using System;
-using System.Drawing;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TicTacToe2.GameTypes
 {
-    class TicTacToe
+    /// <summary>
+    /// Classic Tic Tac Toe game as we all know it.
+    /// </summary>
+    class ClassicTicTacToe : Game
     {
+        /// <summary>
+        /// Board the game is played on.
+        /// </summary>
         protected Board board;
-        protected int maxTurns;
-
-        public TicTacToe(int size = 3)
+        
+        /// <summary>
+        /// Initializes classic tic tac toe game.
+        /// </summary>
+        /// <param name="size">Width and height of the board.</param>
+        public ClassicTicTacToe(int size = 3)
         {
             maxTurns = size * size;
             board = new Board(size);
         }
 
-        public void Play()
+        /// <summary>
+        /// Standard Tic Tac Toe gameplay. Players take turns placing symbols.
+        /// </summary>
+        public override void Play()
         {
             int turn = 1;
             while (Winner == 0 && turn <= maxTurns)
@@ -31,37 +37,33 @@ namespace TicTacToe2.GameTypes
 
                 while (!validMove)
                 {
-                    board.Display();
+                    Program.WriteCenter(board.ToString());
                     string command = Console.ReadLine();
                     string[] coords = command.Split(',');
                     int x;
                     int y;
                     if (coords.Length == 2 && Int32.TryParse(coords[0], out x) && Int32.TryParse(coords[1], out y))
                     {
-                        validMove = board.Values[x][y] == 0;
-                        if (validMove)
+                        if (board.DoMove(x, y, currPlayer))
                         {
+                            validMove = true;
                             turn++;
-                            board.Values[x][y] = currPlayer;
                             continue;
                         }
-                        Console.WriteLine("That position already has an " + board.Values[x][y] + ", choose an empty spot!");
+                        Console.WriteLine("That position already has an " + Program.SymbolMap[board.Values[x][y]] + ", choose an empty spot!");
                     }
                     Console.WriteLine("That is not valid input! Enter coordinated such as 0,0 for the top left corner!");
                 }
             }
 
-            board.Display();
+            Program.WriteCenter(board.ToString());
 
-            if (Winner == 0)
-                Console.WriteLine("DRAW!");
-            else
-                Console.WriteLine("Player {0} is the winner!", Winner);
-
-            Console.WriteLine("Press any key to restart!");
-            Console.ReadKey();
+            base.Play();
         }
 
-        public virtual int Winner => board.Winner;
+        /// <summary>
+        /// The game's winner is the same as the board's winner.
+        /// </summary>
+        public override int Winner => board.Winner;
     }
 }
