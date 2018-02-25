@@ -20,7 +20,7 @@ namespace TicTacToe2.GameTypes
         /// </summary>
         private int size;
 
-        public MultiBoardTicTacToe(int size = 3)
+        public MultiBoardTicTacToe(int size = 3) : base(size)
         {
             this.size = size;
             maxTurns = (int)Math.Pow(size, 3);

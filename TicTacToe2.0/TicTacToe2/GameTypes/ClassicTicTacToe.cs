@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 
 namespace TicTacToe2.GameTypes
 {
@@ -16,7 +17,7 @@ namespace TicTacToe2.GameTypes
         /// Initializes classic tic tac toe game.
         /// </summary>
         /// <param name="size">Width and height of the board.</param>
-        public ClassicTicTacToe(int size = 3)
+        public ClassicTicTacToe(int size = 3) : base(size)
         {
             maxTurns = size * size;
             board = new Board(size);

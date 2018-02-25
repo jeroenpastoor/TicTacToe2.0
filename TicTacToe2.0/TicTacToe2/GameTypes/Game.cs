@@ -16,6 +16,12 @@ namespace TicTacToe2.GameTypes
         /// </summary>
         protected int maxTurns;
 
+        public Game(int size = 3)
+        {
+            if (size <= 1)
+                throw new ArgumentOutOfRangeException("The size of tic tac toe boards needs to be greater than 1!");
+        }
+
         /// <summary>
         /// Controls the full gameplay. The generic version only shows the results for the given board and waits for input to restart.
         /// </summary>
