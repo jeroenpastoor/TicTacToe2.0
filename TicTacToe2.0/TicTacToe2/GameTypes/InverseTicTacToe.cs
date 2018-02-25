@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TicTacToe2.GameTypes
+﻿namespace TicTacToe2.GameTypes
 {
     /// <summary>
     /// Classic Tic Tac Toe with an inverted wincondition: Force your opponent to fill a row, collumn or diagonal.
